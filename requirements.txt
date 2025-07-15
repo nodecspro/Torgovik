@@ -2,6 +2,9 @@
 fastapi
 uvicorn[standard]
 
+# Pydantic с поддержкой валидации email
+pydantic[email]
+
 # База данных
 sqlalchemy[asyncio]
 asyncpg

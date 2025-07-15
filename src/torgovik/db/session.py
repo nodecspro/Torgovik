@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
 from src.torgovik.core.config import settings
@@ -10,3 +10,10 @@ AsyncSessionFactory = async_sessionmaker(engine, autoflush=False, expire_on_comm
 
 class Base(DeclarativeBase):
     pass
+
+async def get_db_session() -> AsyncSession:
+    """
+    Зависимость FastAPI для получения сессии базы данных.
+    """
+    async with AsyncSessionFactory() as session:
+        yield session
