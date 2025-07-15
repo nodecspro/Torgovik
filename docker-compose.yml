@@ -18,6 +18,8 @@ services:
   # Сервис базы данных PostgreSQL
   db:
     image: postgres:15-alpine # Используем готовый официальный образ Postgres
+    ports:
+      - "5432:5432" # Пробрасываем порт 5432 из контейнера на наш компьютер
     volumes:
       # Сохраняем данные БД между перезапусками контейнера
       - postgres_data:/var/lib/postgresql/data/

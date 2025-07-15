@@ -5,9 +5,13 @@ uvicorn[standard]
 # База данных
 sqlalchemy[asyncio]
 asyncpg
+psycopg2-binary
 
 # Конфигурация
 pydantic-settings
 
 # Работа с паролями
 passlib[bcrypt]
+
+# Миграции базы данных
+alembic
