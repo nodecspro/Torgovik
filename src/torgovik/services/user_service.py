@@ -56,3 +56,9 @@ async def authenticate_user(
     
     # 3. Возвращаем пользователя, если все хорошо
     return user
+
+async def get_user_by_id(user_id: int, session: AsyncSession) -> User | None:
+    """Получение пользователя по id."""
+    query = select(User).where(User.id == user_id)
+    result = await session.execute(query)
+    return result.scalars().first()

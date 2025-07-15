@@ -5,6 +5,10 @@ from passlib.context import CryptContext
 
 from src.torgovik.core.config import settings
 
+from src.torgovik.schemas.token import TokenPayload
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+
 # Создаем контекст для хэширования, указывая алгоритм
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -27,3 +31,28 @@ def create_access_token(data: dict) -> str:
         to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
     return encoded_jwt
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+
+def verify_token(token: str) -> TokenPayload:
+    """Проверяет токен и возвращает его полезную нагрузку (payload)."""
+    try:
+        payload = jwt.decode(
+            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+        )
+        # Мы сохраняли id в поле 'sub', извлекаем его
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        token_data = TokenPayload(sub=user_id)
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return token_data

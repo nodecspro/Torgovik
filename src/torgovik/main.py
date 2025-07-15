@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.torgovik.api.v1.endpoints.auth import router as auth_router
+from src.torgovik.api.v1.endpoints.users import router as users_router
 
 app = FastAPI(
     title="Torgovik API",
@@ -8,13 +9,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Подключаем роутер аутентификации
-# Все пути в нем будут начинаться с /api/v1/auth
-app.include_router(
-    auth_router, 
-    prefix="/api/v1/auth", 
-    tags=["Authentication"]
-)
+# Роутер аутентификации
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["Authentication"])
+
+# Роутер пользователей
+app.include_router(users_router, prefix="/api/v1/users", tags=["Users"])
 
 
 @app.get("/")
