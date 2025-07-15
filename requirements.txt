@@ -1,0 +1,13 @@
+# FastAPI и веб-сервер
+fastapi
+uvicorn[standard]
+
+# База данных
+sqlalchemy[asyncio]
+asyncpg
+
+# Конфигурация
+pydantic-settings
+
+# Работа с паролями
+passlib[bcrypt]

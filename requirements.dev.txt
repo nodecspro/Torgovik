@@ -1,0 +1,9 @@
+# Основные зависимости
+-r requirements.txt
+
+# Тестирование и линтинг
+pytest
+pytest-cov
+ruff
+black
+mypy

@@ -1,32 +1,14 @@
-# Этап 1: Сборка зависимостей
-# Используем официальный образ Python. Указание версии гарантирует консистентность.
-FROM python:3.11-slim as builder
+# Используем официальный образ Python
+FROM python:3.11-slim
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
 
-# Устанавливаем Poetry
-RUN pip install poetry
+# Копируем файл с зависимостями
+COPY requirements.txt .
 
-# Копируем файлы с зависимостями в контейнер
-COPY pyproject.toml poetry.lock ./
-
-# Устанавливаем зависимости, не включая dev-зависимости, и создаем .venv
-RUN poetry install --no-dev --no-root
-
-
-# Этап 2: Финальный образ
-# Используем тот же базовый образ для уменьшения размера финального образа
-FROM python:3.11-slim
-
-# Устанавливаем рабочую директорию
-WORKDIR /app
-
-# Копируем виртуальное окружение, созданное на предыдущем этапе
-COPY --from=builder /app/.venv ./.venv
-
-# Активируем виртуальное окружение для всех последующих команд
-ENV PATH="/app/.venv/bin:$PATH"
+# Устанавливаем зависимости из requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем исходный код нашего приложения
 COPY ./src/torgovik ./src/torgovik
