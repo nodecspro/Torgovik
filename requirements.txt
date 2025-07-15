@@ -15,6 +15,9 @@ pydantic-settings
 
 # Работа с паролями
 passlib[bcrypt]
+python-jose[cryptography]
 
 # Миграции базы данных
 alembic
+
+python-multipart

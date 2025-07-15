@@ -40,3 +40,19 @@ async def create_user(user_data: UserCreate, session: AsyncSession) -> User:
     await session.refresh(new_user)
 
     return new_user
+
+async def authenticate_user(
+    email: str, password: str, session: AsyncSession
+) -> User | None:
+    """Аутентификация пользователя."""
+    # 1. Находим пользователя по email
+    user = await get_user_by_email(email, session)
+    if not user:
+        return None
+    
+    # 2. Проверяем, совпадает ли пароль
+    if not security.verify_password(password, user.hashed_password):
+        return None
+    
+    # 3. Возвращаем пользователя, если все хорошо
+    return user
